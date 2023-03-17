@@ -3,6 +3,7 @@ from discord import app_commands
 from discord.ext import commands
 from pymongo import MongoClient
 import os
+import json
 
 intents = discord.Intents.all()
 intents.members = True
@@ -31,6 +32,18 @@ async def check(interaction: discord.Interaction, wallet_address: str):
     whitelisted_wallets = collection.find_one({"_id": "whitelist"})["wallets"]
     if wallet_address.lower() in whitelisted_wallets:
         await interaction.response.send_message(f"✅", ephemeral=True)
+        datas = collection.find_one({"_id": "data"})["datas"]
+        user_id = str(interaction.user.id)
+        if user_id in datas:
+            connected_wallets = datas[user_id]
+        else:
+            connected_wallets = []
+        if wallet_address not in connected_wallets:
+            connected_wallets.append(wallet_address.lower())
+            datas[user_id] = connected_wallets
+            filter = {"_id": "data"}
+            newvalues = {"$set": {"datas": datas}}
+            result = collection.update_one(filter, newvalues)
     else:
         await interaction.response.send_message(f"❌", ephemeral=True)
 
