@@ -45,7 +45,7 @@ async def check(interaction: discord.Interaction, wallet_address: str):
             newvalues = {"$set": {"datas": datas}}
             result = collection.update_one(filter, newvalues)
     else:
-        await interaction.response.send_message(f"❌", ephemeral=True)
+        await interaction.response.send_message(f"❌")
 
 
 @client.command()
