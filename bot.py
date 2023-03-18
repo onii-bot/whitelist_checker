@@ -31,7 +31,7 @@ async def on_ready():
 async def check(interaction: discord.Interaction, wallet_address: str):
     whitelisted_wallets = collection.find_one({"_id": "whitelist"})["wallets"]
     if wallet_address.lower() in whitelisted_wallets:
-        await interaction.response.send_message(f"✅", ephemeral=True)
+        await interaction.response.send_message(f"✅")
         datas = collection.find_one({"_id": "data"})["datas"]
         user_id = str(interaction.user.id)
         if user_id in datas:
